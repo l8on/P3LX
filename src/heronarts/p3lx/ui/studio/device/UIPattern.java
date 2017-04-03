@@ -18,11 +18,10 @@
  * @author Mark C. Slee <mark@heronarts.com>
  */
 
-package heronarts.p3lx.pattern;
+package heronarts.p3lx.ui.studio.device;
 
 import heronarts.p3lx.ui.UI;
-import heronarts.p3lx.ui.studio.UIPatternControl;
 
-public interface LXPatternUI {
+public interface UIPattern {
   public abstract void buildControlUI(UI ui, UIPatternControl container);
 }

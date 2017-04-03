@@ -15,16 +15,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * ##library.name##
- * ##library.sentence##
- * ##library.url##
- *
- * @author      ##author##
- * @modified    ##date##
- * @version     ##library.prettyVersion## (##library.version##)
+ * @author Mark C. Slee <mark@heronarts.com>
  */
 
-/**
- * Framework for embedding LX in Processing 3.
- */
-package heronarts.p3lx;
+package heronarts.p3lx.ui.studio.project;
+
+import heronarts.lx.LX;
+import heronarts.p3lx.ui.UI;
+import heronarts.p3lx.ui.component.UIItemList;
+import heronarts.p3lx.ui.studio.UICollapsibleSection;
+
+public abstract class UIComponentManager extends UICollapsibleSection {
+
+  protected final LX lx;
+  protected final UIItemList itemList;
+
+  protected UIComponentManager(UI ui, LX lx, float x, float y, float w, float h) {
+    super(ui, x, y, w, h);
+    this.lx = lx;
+
+    this.itemList = new UIItemList(ui, 0, 0, getContentWidth(), getContentHeight());
+    this.itemList.addToContainer(this);
+  }
+}
