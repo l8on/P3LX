@@ -27,87 +27,55 @@
 package heronarts.p3lx.ui.studio.midi;
 
 import heronarts.lx.midi.LXMidiEngine;
-import heronarts.lx.midi.LXMidiInput;
+import heronarts.lx.midi.surface.LXMidiSurface;
 import heronarts.p3lx.ui.UI;
 import heronarts.p3lx.ui.UI2dContainer;
-import heronarts.p3lx.ui.UIFocus;
 import heronarts.p3lx.ui.component.UIButton;
 import heronarts.p3lx.ui.component.UILabel;
 import heronarts.p3lx.ui.studio.UICollapsibleSection;
 import processing.core.PConstants;
-import processing.core.PGraphics;
 
-public class UIMidiManager extends UICollapsibleSection {
-
-  public UIMidiManager(final UI ui, final LXMidiEngine midiEngine, float x, float y, float w) {
+public class UIMidiSurfaces extends UICollapsibleSection {
+  public UIMidiSurfaces(final UI ui, final LXMidiEngine midiEngine, float x, float y, float w) {
     super(ui, x, y, w, 0);
-    setTitle("MIDI INPUT");
+    setTitle("MIDI SURFACES");
     setLayout(UI2dContainer.Layout.VERTICAL);
     setChildMargin(2);
     setArrowKeyFocus(UI2dContainer.ArrowKeyFocus.VERTICAL);
+    setVisible(false);
 
     midiEngine.whenReady(new Runnable() {
       public void run() {
-        for (LXMidiInput input : midiEngine.getInputs()) {
-          new UIMidiInput(ui, input, getContentWidth()).addToContainer(UIMidiManager.this);
+        for (LXMidiSurface surface : midiEngine.surfaces) {
+          new UIMidiSurface(ui, surface, getContentWidth()).addToContainer(UIMidiSurfaces.this);
         }
+        setVisible(midiEngine.surfaces.size() > 0);
       }
     });
   }
 
-  private class UIMidiInput extends UI2dContainer implements UIFocus {
-
+  class UIMidiSurface extends UI2dContainer {
     private static final int HEIGHT = 24;
     private static final int PADDING = 4;
     private static final int BUTTON_WIDTH = 16;
 
-    UIMidiInput(UI ui, LXMidiInput input, float w) {
+    UIMidiSurface(UI ui, LXMidiSurface surface, float w) {
       super(0, 0, w, HEIGHT);
       setBackgroundColor(ui.theme.getDarkBackgroundColor());
       setBorderRounding(4);
 
-      float buttonX = w - 3*(PADDING + BUTTON_WIDTH);
-
-      new UILabel(PADDING, PADDING, buttonX - 2*PADDING, 16)
-      .setLabel(input.getDescription())
+      new UILabel(PADDING, PADDING, w - 3*PADDING - BUTTON_WIDTH, 16)
+      .setLabel(surface.getDescription())
       .setTextAlignment(PConstants.LEFT, PConstants.CENTER)
       .addToContainer(this);
 
-      new UIButton(buttonX, PADDING, BUTTON_WIDTH, 16)
-      .setParameter(input.channelEnabled)
-      .setIcon(ui.theme.iconNote)
-      .setMappable(false)
+      new UIButton(w - PADDING - BUTTON_WIDTH, PADDING, BUTTON_WIDTH, 16)
+      .setParameter(surface.enabled)
+      .setIcon(ui.theme.iconControl)
       .setBorder(false)
       .setFocusColor(0xff555555)
-      .addToContainer(this);
-      buttonX += BUTTON_WIDTH + PADDING;
-
-      new UIButton(buttonX, PADDING, BUTTON_WIDTH, 16)
-      .setParameter(input.controlEnabled)
-      .setIcon(ui.theme.iconMap)
       .setMappable(false)
-      .setBorder(false)
-      .setFocusColor(0xff555555)
       .addToContainer(this);
-      buttonX += BUTTON_WIDTH + PADDING;
-
-      new UIButton(buttonX, PADDING, BUTTON_WIDTH, 16)
-      .setParameter(input.syncEnabled)
-      .setIcon(ui.theme.iconTempo)
-      .setMappable(false)
-      .setBorder(false)
-      .setFocusColor(0xff555555)
-      .addToContainer(this);
-      buttonX += BUTTON_WIDTH + PADDING;
     }
-
-    @Override
-    public void drawFocus(UI ui, PGraphics pg) {
-      pg.stroke(ui.theme.getPrimaryColor());
-      pg.line(0, 0, 0, this.height-1);
-    }
-
   }
-
 }
-
