@@ -26,28 +26,32 @@
 
 package heronarts.p3lx.ui.studio.clip;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import heronarts.lx.LX;
-import heronarts.lx.LXChannel;
-import heronarts.lx.clip.LXClip;
 import heronarts.p3lx.ui.UI;
+import heronarts.p3lx.ui.UI2dContainer;
+import heronarts.p3lx.ui.studio.mixer.UIMixer;
 
-public class UIMasterClipStop extends UIClipStop {
+public class UISceneLauncher extends UI2dContainer {
 
-  private final LX lx;
+  public static final float WIDTH = 20;
 
-  UIMasterClipStop(UI ui, LX lx) {
-    super(ui);
-    this.lx = lx;
-  }
+  private final List<UISceneButton> mutableScenes = new ArrayList<UISceneButton>();
+  public final List<UISceneButton> scenes = Collections.unmodifiableList(this.mutableScenes);
 
-  @Override
-  protected void stop() {
-    for (LXChannel channel : this.lx.engine.channels) {
-      for (LXClip clip : channel.clips) {
-        if (clip != null) {
-          clip.stop();
-        }
-      }
+  public UISceneLauncher(UI ui, UIMixer mixer, LX lx, float x, float y) {
+    super(x, y, WIDTH, UIClipLauncher.HEIGHT);
+    setLayout(UI2dContainer.Layout.VERTICAL);
+    setChildMargin(UIClipLauncher.SPACING);
+    setArrowKeyFocus(UI2dContainer.ArrowKeyFocus.VERTICAL);
+    for (int i = 0; i < UIClipLauncher.NUM_CLIPS; ++i) {
+      UISceneButton scene = new UISceneButton(ui, mixer, lx, i);
+      this.mutableScenes.add(scene);
+      scene.addToContainer(this);
     }
+    new UISceneStop(ui, lx).addToContainer(this);
   }
 }
