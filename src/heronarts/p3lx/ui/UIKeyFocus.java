@@ -27,44 +27,8 @@
 package heronarts.p3lx.ui;
 
 /**
- * A component in a CameraLayer. Draws itself and may draw children.
+ * Marker interface for UI components that can be reached by using key navigation
  */
-public abstract class UI3dComponent extends UIObject {
+public interface UIKeyFocus {
 
-  @Override
-  public boolean contains(float x, float y) {
-    return false;
-  }
-
-  @Override
-  public float getWidth() {
-    return -1;
-  }
-
-  @Override
-  public float getHeight() {
-    return -1;
-  }
-
-  /**
-   * Adds a child to this component
-   *
-   * @param child Child component
-   * @return this
-   */
-  public final UI3dComponent addChild(UI3dComponent child) {
-    this.mutableChildren.add(child);
-    return this;
-  }
-
-  /**
-   * Removes a child from this component
-   *
-   * @param child Child component
-   * @return this
-   */
-  public final UI3dComponent removeChild(UI3dComponent child) {
-    this.mutableChildren.remove(child);
-    return this;
-  }
 }
